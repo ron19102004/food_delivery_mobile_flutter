@@ -1,0 +1,2 @@
+weather: https://api.open-meteo.com/v1/forecast?latitude=10.762622&longitude=106.660172&current_weather=true
+address: https://nominatim.openstreetmap.org/reverse?lat=10.762622&lon=106.660172&format=json
