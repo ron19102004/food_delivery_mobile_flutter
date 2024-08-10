@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/assets/animations/index.dart';
 import 'package:mobile/configs/dependency_injection.dart';
 import 'package:mobile/configs/navigation_screen.dart';
+import 'package:mobile/datasource/services/auth_service.dart';
 import 'package:mobile/datasource/services/location_service.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mobile/presentation/blocs/food/personal/food_personal_bloc.dart';
 import 'package:mobile/presentation/blocs/location/location_bloc.dart';
 import 'package:mobile/presentation/blocs/weather/weather_bloc.dart';
+import 'package:toastification/toastification.dart';
 
 Future<void> main() async {
   await initializeDI();
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // Make status bar transparent
+    statusBarIconBrightness: Brightness.light, // Status bar icons color
+    systemNavigationBarColor: Colors.transparent, // Make navigation bar transparent
+    systemNavigationBarIconBrightness: Brightness.light, // Navigation bar icons color
+  ));
   runApp(const MainWidget());
 }
 
@@ -32,32 +42,51 @@ class _MainWidgetState extends State<MainWidget> {
     });
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp.router(
+  //     routerConfig: router,
+  //     debugShowCheckedModeBanner: false,
+  //
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _locationService.getLocation(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
-          final location = snapshot.requireData;
-          return MultiBlocProvider(
-              providers: [
-                BlocProvider<WeatherBloc>(
-                    create: (_) => WeatherBloc()
-                      ..add(WeatherFetchEvent(
-                          lat: location.latitude ?? "",
-                          lon: location.longitude ?? ""))),
-                BlocProvider<LocationBloc>(
-                  create: (_) => LocationBloc()
-                    ..add(LoadLocationEvent(locationModel: location)),
-                )
-              ],
-              child: MaterialApp.router(
-                routerConfig: router,
-                debugShowCheckedModeBanner: false,
-              ));
-        }
-        return _loadingWidget();
-      },
+    return ToastificationWrapper(
+      child: FutureBuilder(
+        future: _locationService.getLocation(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            final location = snapshot.requireData;
+            LocationService.locationCodeCurrent = location.code;
+            return MultiBlocProvider(
+                providers: [
+                  BlocProvider<WeatherBloc>(
+                      create: (_) => WeatherBloc()
+                        ..add(WeatherFetchEvent(
+                            lat: location.latitude ?? "",
+                            lon: location.longitude ?? ""))),
+                  BlocProvider<LocationBloc>(
+                    create: (_) => LocationBloc()
+                      ..add(LoadLocationEvent(locationModel: location)),
+                  ),
+                  BlocProvider<FoodPersonalBloc>(
+                      create: (_) => FoodPersonalBloc()
+                        ..add(FetchFoodByLocationCodeEvent()))
+                ],
+                child: FutureBuilder(
+                  future: AuthService.checkAuthentication(),
+                  builder: (context, snapshot) {
+                    return MaterialApp.router(
+                      routerConfig: router,
+                      debugShowCheckedModeBanner: false,
+                    );
+                  },
+                ));
+          }
+          return _loadingWidget();
+        },
+      ),
     );
   }
 

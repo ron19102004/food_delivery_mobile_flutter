@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/configs/color_config.dart';
+import 'package:mobile/configs/navigation_screen.dart';
 
 class PersonalLayout extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -16,7 +17,6 @@ class PersonalLayout extends StatefulWidget {
 }
 
 class _PersonalLayoutState extends State<PersonalLayout> {
-  int _indexCurrent = 0;
   final List<TabItem> items = const [
     TabItem(
       icon: CupertinoIcons.house,
@@ -46,9 +46,9 @@ class _PersonalLayoutState extends State<PersonalLayout> {
         backgroundColor: Colors.white,
         color: Colors.black38,
         colorSelected: ColorConfig.primary,
-        indexSelected: _indexCurrent,
+        indexSelected: BottomBarState.indexPersonBottomBar,
         onTap: (int index) => setState(() {
-          _indexCurrent = index;
+          BottomBarState.indexPersonBottomBar = index;
           _goToRoute(index);
         }),
       ),

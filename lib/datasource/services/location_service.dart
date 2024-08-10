@@ -1,8 +1,9 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:mobile/datasource/models/location_model.dart';
+import 'package:mobile/datasource/models/location_map_model.dart';
 import 'package:mobile/datasource/repositories/location_repository.dart';
 
 class LocationService {
+  static String locationCodeCurrent = "";
   final LocationRepository locationRepository;
 
   LocationService({required this.locationRepository});
@@ -29,13 +30,14 @@ class LocationService {
         // Android's shouldShowRequestPermissionRationale
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
-       return Future.error('Location permissions are denied');
+        return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.

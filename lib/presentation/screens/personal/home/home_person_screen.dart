@@ -2,8 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/assets/images/index.dart';
+import 'package:mobile/configs/color_config.dart';
+import 'package:mobile/datasource/services/location_service.dart';
+import 'package:mobile/presentation/blocs/food/personal/food_personal_bloc.dart';
 import 'package:mobile/presentation/blocs/location/location_bloc.dart';
 import 'package:mobile/presentation/blocs/weather/weather_bloc.dart';
+import 'package:mobile/presentation/widgets/food_card_home_personal_widget.dart';
 import 'package:mobile/presentation/widgets/image_icon_widget.dart';
 
 class HomePersonScreen extends StatefulWidget {
@@ -60,18 +64,64 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 5),
-        child: Container(
-          alignment: Alignment.topLeft,
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: Colors.grey.shade50,
-          child: SafeArea(
-              child: Column(
-            children: [_locationWidget()],
-          )),
-        ),
+        child: SafeArea(
+            child: Column(
+          children: [
+            _locationWidget(),
+            Text(
+              "Place code: ${LocationService.locationCodeCurrent}",
+              style: const TextStyle(
+                  color: Colors.red, fontWeight: FontWeight.w500, fontSize: 15),
+            ),
+            _foodRenderWider()
+          ],
+        )),
       ),
     );
+  }
+
+  Widget _foodRenderWider() {
+    return BlocBuilder<FoodPersonalBloc, FoodPersonalState>(
+        builder: (context, state) {
+      if (state is FetchingFoodByLocationCodeState) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: ColorConfig.primary,
+          ),
+        );
+      }
+      if (state is FetchSuccessFoodByLocationCodeState) {
+        final list = state.foodsByLocationCode;
+        return Expanded(
+          child: Container(
+            color: Colors.grey.shade100,
+            width: MediaQuery.of(context).size.width,
+            child: RefreshIndicator(
+              color: ColorConfig.primary,
+              backgroundColor: Colors.white,
+              onRefresh: () async {
+                context
+                    .read<FoodPersonalBloc>()
+                    .add(FetchFoodByLocationCodeEvent());
+              },
+              child: ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  final food = list[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: FoodCardHomePersonalWidget(
+                      foodModel: food,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      }
+      return Container();
+    });
   }
 
   Widget _locationWidget() {

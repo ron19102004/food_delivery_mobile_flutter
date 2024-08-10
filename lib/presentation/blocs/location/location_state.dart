@@ -8,7 +8,6 @@ final class LocationInitial extends LocationState {}
 
 class LocationSuccess extends LocationState {
   LocationModel locationModel;
-
   LocationSuccess({required this.locationModel});
 
   @override

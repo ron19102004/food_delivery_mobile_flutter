@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:mobile/configs/constant.dart';
+import 'package:mobile/configs/http_config.dart';
 import 'package:mobile/datasource/models/weather_model.dart';
 
 class WeatherRepository {

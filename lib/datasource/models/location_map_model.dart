@@ -12,6 +12,7 @@ class LocationModel {
   final String addresstype;
   final String name;
   final String displayName;
+  final String code;
 
   LocationModel({
     required this.placeId,
@@ -27,6 +28,7 @@ class LocationModel {
     required this.addresstype,
     required this.name,
     required this.displayName,
+    required this.code
   });
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class LocationModel {
       addresstype: json['addresstype'],
       name: json['name'],
       displayName: json['display_name'],
+      code: json["address"]["ISO3166-2-lvl4"]
     );
   }
 }
