@@ -39,10 +39,20 @@ class _FoodDetailsPersonScreenState extends State<FoodDetailsPersonScreen> {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               backgroundColor: ColorConfig.primary,
+              leading: IconButton(
+                iconSize: 20,
+                onPressed: () {
+                  context.pop();
+                },
+                icon: const Icon(
+                  CupertinoIcons.back,
+                  color: Colors.black87,
+                ),
+              ),
               title: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const Text(
                       "Open at ",
@@ -78,7 +88,6 @@ class _FoodDetailsPersonScreenState extends State<FoodDetailsPersonScreen> {
                         height: 200,
                         fit: BoxFit.cover,
                       ),
-                      _navbarWidget(),
                       food.saleOff > 0.0
                           ? Positioned(
                               top: 0,
@@ -102,7 +111,7 @@ class _FoodDetailsPersonScreenState extends State<FoodDetailsPersonScreen> {
                                   ),
                                 ),
                               ))
-                          : const SizedBox()
+                          : const SizedBox(),
                     ],
                   ),
                 ),
@@ -313,32 +322,5 @@ class _FoodDetailsPersonScreenState extends State<FoodDetailsPersonScreen> {
             ),
           );
         });
-  }
-
-  Widget _navbarWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Colors.black26),
-            child: IconButton(
-              iconSize: 20,
-              onPressed: () {
-                context.pop();
-              },
-              icon: const Icon(
-                CupertinoIcons.back,
-                color: Colors.white,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
   }
 }

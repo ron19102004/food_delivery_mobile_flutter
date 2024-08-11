@@ -7,6 +7,7 @@ import 'package:mobile/presentation/screens/auth/login_screen.dart';
 import 'package:mobile/presentation/screens/auth/register_screen.dart';
 import 'package:mobile/presentation/screens/build_widget.dart';
 import 'package:mobile/presentation/screens/personal/home/food_details_person_screen.dart';
+import 'package:mobile/presentation/screens/personal/home/foods_by_category_id_screen.dart';
 import 'package:mobile/presentation/screens/personal/home/home_person_screen.dart';
 import 'package:mobile/presentation/screens/personal/layout.dart';
 import 'package:mobile/presentation/screens/personal/profile/profile_person_screen.dart';
@@ -18,7 +19,8 @@ enum RoutePath {
   voucherPersonScreen(path: "/voucher"),
   loginScreen(path: "/login"),
   registerScreen(path: "/register"),
-  foodDetailsPersonScreen(path: "details/:foodId");
+  foodDetailsPersonScreen(path: "details/:foodId"),
+  foodsByCategoryIdPersonScreen(path: "foods_category/:categoryId/:categoryName");
 
   final String path;
 
@@ -76,8 +78,18 @@ final GoRouter router = GoRouter(
                     name: RoutePath.foodDetailsPersonScreen.name,
                     builder: (context, state) {
                       return FoodDetailsPersonScreen(
-                          foodId:
-                              int.parse(state.pathParameters["foodId"] ?? "-1"));
+                          foodId: int.parse(
+                              state.pathParameters["foodId"] ?? "-1"));
+                    },
+                  ),
+                  GoRoute(
+                    path: RoutePath.foodsByCategoryIdPersonScreen.path,
+                    name: RoutePath.foodsByCategoryIdPersonScreen.name,
+                    builder: (context, state) {
+                      return FoodsByCategoryIdScreen(
+                         categoryName: state.pathParameters["categoryName"] ?? "Unknown category",
+                          categoryId:
+                              int.parse(state.pathParameters["categoryId"] ?? "-1"));
                     },
                   )
                 ]),

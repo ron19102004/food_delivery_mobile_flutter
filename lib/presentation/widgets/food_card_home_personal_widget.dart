@@ -6,8 +6,8 @@ import 'package:mobile/datasource/models/food_model.dart';
 
 class FoodCardHomePersonalWidget extends StatefulWidget {
   final FoodModel foodModel;
-
-  const FoodCardHomePersonalWidget({super.key, required this.foodModel});
+  double? imageSize;
+  FoodCardHomePersonalWidget({super.key, required this.foodModel,this.imageSize});
 
   @override
   State<FoodCardHomePersonalWidget> createState() =>
@@ -37,42 +37,45 @@ class _FoodCardHomePersonalWidgetState
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        decoration: BoxDecoration(color: Colors.white),
+        decoration: const BoxDecoration(color: Colors.white),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 90,
-              height: 90,
-              child: Stack(
-                children: [
-                  Image.network(
-                    food.poster,
-                    height: 90,
-                    width: 90,
-                    fit: BoxFit.cover,
-                  ),
-                  food.saleOff > 0.0
-                      ? Positioned(
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(5))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 2, vertical: 1),
-                              child: Text(
-                                "Sale ${food.saleOff}%",
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 14),
+              width: widget.imageSize ?? 100,
+              height: widget.imageSize ?? 100,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Stack(
+                  children: [
+                    Image.network(
+                      food.poster,
+                      height: widget.imageSize ?? 100,
+                      width: widget.imageSize ?? 100,
+                      fit: BoxFit.cover,
+                    ),
+                    food.saleOff > 0.0
+                        ? Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(5))),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 2, vertical: 1),
+                                child: Text(
+                                  "Sale ${food.saleOff}%",
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                ),
                               ),
-                            ),
-                          ))
-                      : const SizedBox()
-                ],
+                            ))
+                        : const SizedBox()
+                  ],
+                ),
               ),
             ),
             const SizedBox(
@@ -94,7 +97,7 @@ class _FoodCardHomePersonalWidgetState
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "Sold: ${food.sold}",
+                        "Sold: ${food.sold} | Category : ${food.categoryModel?.name ?? ""}",
                         style: const TextStyle(
                             fontSize: 14, color: Colors.black54),
                         overflow: TextOverflow.ellipsis,

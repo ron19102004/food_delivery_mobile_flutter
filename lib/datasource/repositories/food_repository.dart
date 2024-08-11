@@ -7,7 +7,15 @@ import 'package:http/http.dart' as http;
 class FoodRepository {
   Future<List<FoodModel>> getFoodsByLocationCode(String code) async {
     var response =
-        await http.get(Uri.parse(my_api_url("foods/location/$code")));
+        await http.get(Uri.parse(my_api_url("foods/products?location_code=$code")));
+    if (response.statusCode != 200) return [];
+    var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+    List<dynamic> dataArr = jsonData["data"];
+    return dataArr.map((e) => FoodModel.fromJson(e)).toList();
+  }
+  Future<List<FoodModel>> getFoodsByCategoryIdAndLocationCode(int id,String code) async {
+    var response =
+    await http.get(Uri.parse(my_api_url("foods/products?category_id=$id&location_code=$code")));
     if (response.statusCode != 200) return [];
     var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
     List<dynamic> dataArr = jsonData["data"];

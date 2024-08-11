@@ -19,15 +19,15 @@ class PersonalLayout extends StatefulWidget {
 class _PersonalLayoutState extends State<PersonalLayout> {
   final List<TabItem> items = const [
     TabItem(
-      icon: CupertinoIcons.house,
+      icon: CupertinoIcons.house_alt_fill,
       title: 'Home',
     ),
     TabItem(
-      icon: CupertinoIcons.gift,
+      icon: CupertinoIcons.gift_fill,
       title: 'Vouchers',
     ),
     TabItem(
-      icon: CupertinoIcons.person,
+      icon: CupertinoIcons.person_alt,
       title: 'Me',
     ),
   ];
