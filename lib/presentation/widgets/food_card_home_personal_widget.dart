@@ -103,7 +103,7 @@ class _FoodCardHomePersonalWidgetState
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "Price: ${food.price}\$",
+                        "Price:\$${food.price}",
                         style: TextStyle(
                             fontSize: 14,
                             decoration: food.saleOff > 0.0
@@ -112,7 +112,7 @@ class _FoodCardHomePersonalWidgetState
                       ),
                       food.saleOff > 0.0
                           ? Text(
-                              "Sale price: ${food.salePrice}\$",
+                              "Sale price:\$${food.salePrice}",
                               style: const TextStyle(
                                   fontSize: 16,
                                   color: ColorConfig.primary,

@@ -46,7 +46,8 @@ class _VoucherPersonScreenState extends State<VoucherPersonScreen> {
               final voucher = list[index];
               return ListTile(
                 minLeadingWidth: 100,
-                tileColor: index % 2 == 0 ? Colors.orange.shade50 : Colors.white,
+                tileColor:
+                    index % 2 == 0 ? Colors.orange.shade50 : Colors.white,
                 title: Text(voucher.name),
                 trailing: IconButton(
                     onPressed: () {
@@ -54,7 +55,10 @@ class _VoucherPersonScreenState extends State<VoucherPersonScreen> {
                       Clipboard.setData(ClipboardData(text: voucher.code));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Code copied to clipboard!')),
+                            content: Text(
+                          'Code copied to clipboard!',
+                          style: TextStyle(color: Colors.white),
+                        )),
                       );
                     },
                     icon: const Icon(Icons.copy)),

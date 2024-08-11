@@ -6,11 +6,12 @@ import 'package:mobile/datasource/services/auth_service.dart';
 import 'package:mobile/presentation/screens/auth/login_screen.dart';
 import 'package:mobile/presentation/screens/auth/register_screen.dart';
 import 'package:mobile/presentation/screens/build_widget.dart';
-import 'package:mobile/presentation/screens/personal/home/food_details_person_screen.dart';
-import 'package:mobile/presentation/screens/personal/home/foods_by_category_id_screen.dart';
+import 'package:mobile/presentation/screens/personal/food/food_details_person_screen.dart';
+import 'package:mobile/presentation/screens/personal/food/foods_by_category_id_screen.dart';
 import 'package:mobile/presentation/screens/personal/home/home_person_screen.dart';
 import 'package:mobile/presentation/screens/personal/layout.dart';
 import 'package:mobile/presentation/screens/personal/profile/profile_person_screen.dart';
+import 'package:mobile/presentation/screens/personal/profile/profile_seller_at_person_screen.dart';
 import 'package:mobile/presentation/screens/personal/voucher/voucher_person_screen.dart';
 
 enum RoutePath {
@@ -20,7 +21,9 @@ enum RoutePath {
   loginScreen(path: "/login"),
   registerScreen(path: "/register"),
   foodDetailsPersonScreen(path: "details/:foodId"),
-  foodsByCategoryIdPersonScreen(path: "foods_category/:categoryId/:categoryName");
+  foodsByCategoryIdPersonScreen(
+      path: "foods_category/:categoryId/:categoryName"),
+  sellerDetailsAtPersonScreen(path: "seller/details/:id");
 
   final String path;
 
@@ -87,9 +90,18 @@ final GoRouter router = GoRouter(
                     name: RoutePath.foodsByCategoryIdPersonScreen.name,
                     builder: (context, state) {
                       return FoodsByCategoryIdScreen(
-                         categoryName: state.pathParameters["categoryName"] ?? "Unknown category",
-                          categoryId:
-                              int.parse(state.pathParameters["categoryId"] ?? "-1"));
+                          categoryName: state.pathParameters["categoryName"] ??
+                              "Unknown category",
+                          categoryId: int.parse(
+                              state.pathParameters["categoryId"] ?? "-1"));
+                    },
+                  ),
+                  GoRoute(
+                    path: RoutePath.sellerDetailsAtPersonScreen.path,
+                    name: RoutePath.sellerDetailsAtPersonScreen.name,
+                    builder: (context, state) {
+                      return ProfileSellerAtPersonScreen(
+                          id: int.parse(state.pathParameters["id"] ?? "0"));
                     },
                   )
                 ]),

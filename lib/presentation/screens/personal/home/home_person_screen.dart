@@ -21,6 +21,8 @@ class HomePersonScreen extends StatefulWidget {
 }
 
 class _HomePersonScreenState extends State<HomePersonScreen> {
+  int pageNumber = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,8 +97,7 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
             child: Container(
               height: 78,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade50)),
+              decoration: const BoxDecoration(),
               child: GridView.builder(
                   padding: const EdgeInsets.all(10.0),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -177,11 +178,33 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
               onRefresh: () async {
                 context
                     .read<FoodPersonalBloc>()
-                    .add(FetchFoodByLocationCodeEvent());
+                    .add(FetchFoodByLocationCodeEvent(pageNumber: 0));
               },
               child: ListView.builder(
-                itemCount: list.length,
+                itemCount: list.length + 1,
                 itemBuilder: (context, index) {
+                  if (index == list.length) {
+                    return Container(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(color: Colors.white),
+                        child: GestureDetector(
+                          onTap: () async {
+                            context.read<FoodPersonalBloc>().add(
+                                FetchFoodByLocationCodeEvent(
+                                    pageNumber: pageNumber + 1));
+                            setState(() {
+                              pageNumber += 1;
+                            });
+                          },
+                          child: const Center(
+                              child: Text(
+                            "More",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 15),
+                          )),
+                        ));
+                  }
                   final food = list[index];
                   return FoodCardHomePersonalWidget(
                     foodModel: food,

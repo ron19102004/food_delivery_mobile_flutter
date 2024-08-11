@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mobile/configs/http_config.dart';
-import 'package:mobile/configs/navigation_screen.dart';
+import 'package:mobile/datasource/models/seller_model.dart';
 import 'package:mobile/datasource/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +10,13 @@ class AuthService {
   static bool isAuthenticated = false;
   static UserModel? userCurrent;
 
+  static Future<SellerModel?> getSellerByUsername(int id)async{
+    var response = await http.get(Uri.parse(my_api_url("sellers/details/$id")));
+    if(response.statusCode != 200) return null;
+    final jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+    if(jsonData["status"]==false) return null;
+    return SellerModel.fromJson(jsonData["data"]);
+  }
   static Future<void> _setAuthSharedPreferences(
       UserModel userCurrent, String token) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -30,8 +35,9 @@ class AuthService {
               "content-type": "application/json",
               "Authorization": "Bearer $token"
             });
-        var dataJson = jsonDecode(response.body);
+        var dataJson = jsonDecode(utf8.decode(response.bodyBytes));
         if (dataJson["status"] == false) {
+          logout(()=>{});
           return;
         }
         final user = UserModel.fromJson(dataJson["data"]);
@@ -40,6 +46,7 @@ class AuthService {
         await _setAuthSharedPreferences(user, token);
       } catch (e) {
         AuthService.isAuthenticated = false;
+        logout(()=>{});
       }
     }
   }
@@ -64,7 +71,7 @@ class AuthService {
             "password": password
           }),
           headers: {"content-type": "application/json"});
-      var dataJson = jsonDecode(response.body);
+      var dataJson = jsonDecode(utf8.decode(response.bodyBytes));
       if (dataJson["status"] == false) {
         fail(dataJson["message"]);
         return;
@@ -94,7 +101,7 @@ class AuthService {
       var response = await http.post(Uri.parse(my_api_url("auth/login")),
           body: jsonEncode({"username": username, "password": password}),
           headers: {"content-type": "application/json"});
-      var dataJson = jsonDecode(response.body);
+      var dataJson = jsonDecode(utf8.decode(response.bodyBytes));
       if (dataJson["status"] == false) {
         fail(dataJson["message"]);
         return;

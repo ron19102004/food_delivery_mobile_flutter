@@ -76,7 +76,7 @@ class _MainWidgetState extends State<MainWidget> {
                         ..add(FetchCategoryEvent())),
                   BlocProvider<FoodPersonalBloc>(
                       create: (_) => FoodPersonalBloc()
-                        ..add(FetchFoodByLocationCodeEvent()))
+                        ..add(FetchFoodByLocationCodeEvent(pageNumber: 0)))
                 ],
                 child: FutureBuilder(
                   future: AuthService.checkAuthentication(),

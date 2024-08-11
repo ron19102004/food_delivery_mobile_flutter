@@ -15,7 +15,7 @@ class FoodPersonalBloc extends Bloc<FoodPersonalEvent, FoodPersonalState> {
     on<FetchFoodByLocationCodeEvent>((event, emit) async {
       emit(FetchingFoodByLocationCodeState());
       List<FoodModel> foods = await foodRepository
-          .getFoodsByLocationCode(LocationService.locationCodeCurrent);
+          .getFoodsByLocationCode(LocationService.locationCodeCurrent,event.pageNumber);
       emit(FetchSuccessFoodByLocationCodeState(foodsByLocationCode: foods));
     });
   }

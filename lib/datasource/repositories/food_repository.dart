@@ -5,9 +5,9 @@ import 'package:mobile/datasource/models/food_model.dart';
 import 'package:http/http.dart' as http;
 
 class FoodRepository {
-  Future<List<FoodModel>> getFoodsByLocationCode(String code) async {
+  Future<List<FoodModel>> getFoodsByLocationCode(String code,int pageNumber) async {
     var response =
-        await http.get(Uri.parse(my_api_url("foods/products?location_code=$code")));
+        await http.get(Uri.parse(my_api_url("foods/products?location_code=$code&page=$pageNumber")));
     if (response.statusCode != 200) return [];
     var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
     List<dynamic> dataArr = jsonData["data"];
