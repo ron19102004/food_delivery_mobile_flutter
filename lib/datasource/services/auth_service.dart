@@ -10,7 +10,7 @@ class AuthService {
   static bool isAuthenticated = false;
   static UserModel? userCurrent;
 
-  static Future<SellerModel?> getSellerByUsername(int id)async{
+  static Future<SellerModel?> getSellerById(int id)async{
     var response = await http.get(Uri.parse(my_api_url("sellers/details/$id")));
     if(response.statusCode != 200) return null;
     final jsonData = jsonDecode(utf8.decode(response.bodyBytes));

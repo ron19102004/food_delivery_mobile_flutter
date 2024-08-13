@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 
 class VoucherRepository {
   Future<List<VoucherModel>> getVoucher(
-      String usernameSeller, bool isSystem) async {
-    String url = isSystem ? "vouchers/system/all" : "vouchers/$usernameSeller";
+      int sellerId, bool isSystem) async {
+    String url = isSystem ? "vouchers/system/all" : "vouchers/seller-id/$sellerId";
     var response = await http.get(Uri.parse(my_api_url(url)));
     if (response.statusCode != 200) return [];
     var jsonData = jsonDecode(utf8.decode(response.bodyBytes));

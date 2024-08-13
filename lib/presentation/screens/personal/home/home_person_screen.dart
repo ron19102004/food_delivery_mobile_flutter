@@ -24,6 +24,11 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
   int pageNumber = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -183,6 +188,28 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
               child: ListView.builder(
                 itemCount: list.length + 1,
                 itemBuilder: (context, index) {
+                  if (list.isEmpty && pageNumber > 0) {
+                    return Container(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(color: Colors.white),
+                        child: GestureDetector(
+                          onTap: () async {
+                            context.read<FoodPersonalBloc>().add(
+                                FetchFoodByLocationCodeEvent(
+                                    pageNumber: pageNumber - 1));
+                            setState(() {
+                              pageNumber -= 1;
+                            });
+                          },
+                          child: const Center(
+                              child: Text(
+                            "Back",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 15),
+                          )),
+                        ));
+                  }
                   if (index == list.length) {
                     return Container(
                         padding: const EdgeInsets.symmetric(vertical: 15),

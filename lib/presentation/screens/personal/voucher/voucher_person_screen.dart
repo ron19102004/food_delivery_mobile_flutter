@@ -30,7 +30,7 @@ class _VoucherPersonScreenState extends State<VoucherPersonScreen> {
       ),
       body: SafeArea(
           child: FutureBuilder(
-        future: di<VoucherRepository>().getVoucher("", true),
+        future: di<VoucherRepository>().getVoucher(0, true),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(

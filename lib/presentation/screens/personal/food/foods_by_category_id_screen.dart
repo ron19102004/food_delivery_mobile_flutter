@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/configs/color_config.dart';
-import 'package:mobile/configs/dependency_injection.dart';
-import 'package:mobile/datasource/repositories/food_repository.dart';
-import 'package:mobile/datasource/services/location_service.dart';
+import 'package:mobile/presentation/blocs/food/category/food_by_category_bloc.dart';
 import 'package:mobile/presentation/widgets/food_card_home_personal_widget.dart';
 
 class FoodsByCategoryIdScreen extends StatefulWidget {
@@ -20,6 +19,16 @@ class FoodsByCategoryIdScreen extends StatefulWidget {
 }
 
 class _FoodsByCategoryIdScreenState extends State<FoodsByCategoryIdScreen> {
+  int _pageCurrent = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<FoodByCategoryBloc>().add(
+        FetchFoodByLocationCodeAndCategoryIdEvent(
+            pageNumber: 0, categoryId: widget.categoryId));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,28 +51,66 @@ class _FoodsByCategoryIdScreenState extends State<FoodsByCategoryIdScreen> {
               color: Colors.black87,
             ),
           )),
-      body: FutureBuilder(
-          future: di<FoodRepository>().getFoodsByCategoryIdAndLocationCode(
-              widget.categoryId, LocationService.locationCodeCurrent),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData || snapshot.data == null) {
-              return Container(
-                color: Colors.white,
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    color: ColorConfig.primary,
-                  ),
-                ),
-              );
-            }
-            final list = snapshot.data!;
-            return Expanded(
+      body: BlocBuilder<FoodByCategoryBloc, FoodByCategoryState>(
+        builder: (context, state) {
+          if (state is FetchSuccessByCategoryAndLocationCodeState) {
+            final list = state.foodsByLocationCodeAndCategory;
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<FoodByCategoryBloc>().add(
+                    FetchFoodByLocationCodeAndCategoryIdEvent(
+                        pageNumber: 0, categoryId: widget.categoryId));
+              },
               child: Container(
                 color: Colors.grey.shade100,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                  itemCount: list.length,
+                  itemCount: list.length + 1,
                   itemBuilder: (context, index) {
+                    if (list.isEmpty && _pageCurrent > 0){
+                      return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: GestureDetector(
+                            onTap: () async {
+                              context.read<FoodByCategoryBloc>().add(
+                                  FetchFoodByLocationCodeAndCategoryIdEvent(
+                                      pageNumber: _pageCurrent - 1, categoryId: widget.categoryId));
+                              setState(() {
+                                _pageCurrent -= 1;
+                              });
+                            },
+                            child: const Center(
+                                child: Text(
+                                  "Back",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500, fontSize: 15),
+                                )),
+                          ));
+                    }
+                    if (index == list.length) {
+                      return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: GestureDetector(
+                            onTap: () async {
+                              context.read<FoodByCategoryBloc>().add(
+                                  FetchFoodByLocationCodeAndCategoryIdEvent(
+                                      pageNumber: _pageCurrent + 1, categoryId: widget.categoryId));
+                              setState(() {
+                                _pageCurrent += 1;
+                              });
+                            },
+                            child: const Center(
+                                child: Text(
+                              "More",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 15),
+                            )),
+                          ));
+                    }
                     final food = list[index];
                     return FoodCardHomePersonalWidget(
                       imageSize: 120,
@@ -73,8 +120,17 @@ class _FoodsByCategoryIdScreenState extends State<FoodsByCategoryIdScreen> {
                 ),
               ),
             );
-            ;
-          }),
+          }
+          return const Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: CircularProgressIndicator(
+                color: ColorConfig.primary,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

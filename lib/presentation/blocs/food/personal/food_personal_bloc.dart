@@ -18,5 +18,6 @@ class FoodPersonalBloc extends Bloc<FoodPersonalEvent, FoodPersonalState> {
           .getFoodsByLocationCode(LocationService.locationCodeCurrent,event.pageNumber);
       emit(FetchSuccessFoodByLocationCodeState(foodsByLocationCode: foods));
     });
+
   }
 }

@@ -13,9 +13,9 @@ class FoodRepository {
     List<dynamic> dataArr = jsonData["data"];
     return dataArr.map((e) => FoodModel.fromJson(e)).toList();
   }
-  Future<List<FoodModel>> getFoodsByCategoryIdAndLocationCode(int id,String code) async {
+  Future<List<FoodModel>> getFoodsByCategoryIdAndLocationCode(int id,String code,int pageNumber) async {
     var response =
-    await http.get(Uri.parse(my_api_url("foods/products?category_id=$id&location_code=$code")));
+    await http.get(Uri.parse(my_api_url("foods/products?category_id=$id&location_code=$code&page=$pageNumber")));
     if (response.statusCode != 200) return [];
     var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
     List<dynamic> dataArr = jsonData["data"];
@@ -28,5 +28,13 @@ class FoodRepository {
     var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
     final food = FoodModel.fromJson(jsonData["data"]["food"]);
     return food;
+  }
+  Future<List<FoodModel>> getFoodsBySellerId(int id,int pageNumber) async {
+    var response =
+    await http.get(Uri.parse(my_api_url("foods/seller/uid/$id?page=$pageNumber")));
+    if (response.statusCode != 200) return [];
+    var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+    List<dynamic> dataArr = jsonData["data"];
+    return dataArr.map((e) => FoodModel.fromJson(e)).toList();
   }
 }

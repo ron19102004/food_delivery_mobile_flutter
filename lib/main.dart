@@ -8,7 +8,9 @@ import 'package:mobile/datasource/services/auth_service.dart';
 import 'package:mobile/datasource/services/location_service.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mobile/presentation/blocs/category/category_bloc.dart';
+import 'package:mobile/presentation/blocs/food/category/food_by_category_bloc.dart';
 import 'package:mobile/presentation/blocs/food/personal/food_personal_bloc.dart';
+import 'package:mobile/presentation/blocs/food/seller/food_by_seller_bloc.dart';
 import 'package:mobile/presentation/blocs/location/location_bloc.dart';
 import 'package:mobile/presentation/blocs/weather/weather_bloc.dart';
 import 'package:toastification/toastification.dart';
@@ -76,7 +78,11 @@ class _MainWidgetState extends State<MainWidget> {
                         ..add(FetchCategoryEvent())),
                   BlocProvider<FoodPersonalBloc>(
                       create: (_) => FoodPersonalBloc()
-                        ..add(FetchFoodByLocationCodeEvent(pageNumber: 0)))
+                        ..add(FetchFoodByLocationCodeEvent(pageNumber: 0))),
+                  BlocProvider<FoodByCategoryBloc>(
+                      create: (_) => FoodByCategoryBloc()),
+                  BlocProvider<FoodBySellerBloc>(
+                      create: (_) => FoodBySellerBloc())
                 ],
                 child: FutureBuilder(
                   future: AuthService.checkAuthentication(),
