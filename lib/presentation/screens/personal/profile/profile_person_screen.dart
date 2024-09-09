@@ -27,9 +27,24 @@ class _ProfilePersonScreenState extends State<ProfilePersonScreen> {
       body: Column(
         children: [
           ListTile(
+            tileColor: Colors.grey.shade100,
+            onTap: () {
+              context.goNamed(RoutePath.myOrderPersonScreen.name);
+            },
+            leading: const Text(
+              "My Orders",
+              style: TextStyle(fontSize: 15),
+            ),
+            trailing: const Icon(CupertinoIcons.shopping_cart),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          ListTile(
+            tileColor: Colors.grey.shade100,
             onTap: () async {
               await AuthService.logout(() {
-                BottomBarState.indexPersonBottomBar = 0;
+                BottomBarState.indexPersonBottomBar = BottomBarIndex.home.idx;
                 context.goNamed(RoutePath.homePersonalScreen.name);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -44,8 +59,8 @@ class _ProfilePersonScreenState extends State<ProfilePersonScreen> {
               "Logout",
               style: TextStyle(fontSize: 15),
             ),
-            trailing: Icon(CupertinoIcons.arrow_right_square_fill),
-          )
+            trailing: const Icon(CupertinoIcons.arrow_right_square_fill),
+          ),
         ],
       ),
     );
@@ -64,6 +79,13 @@ class _ProfilePersonScreenState extends State<ProfilePersonScreen> {
             userCurrent?.avatar ?? "",
             width: 100,
             height: 100,
+            errorBuilder: (context, error, stackTrace) => Container(
+              width: 100,
+              height: 100,
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.black12)),
+              child: const Center(child: Icon(CupertinoIcons.person)),
+            ),
           ),
           Expanded(
               flex: 1,

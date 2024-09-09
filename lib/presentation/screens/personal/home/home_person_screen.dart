@@ -41,35 +41,50 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
               borderRadius: BorderRadius.circular(10)),
           child: BlocBuilder<WeatherBloc, WeatherState>(
             builder: (context, state) {
-              return TextField(
-                onChanged: (value) {},
-                decoration: InputDecoration(
-                    hintText: state.getWeather() != null
-                        ? "The weather at ur location is ${state.getWeather()?.temperature}${state.getWeather()?.temperatureUnit}"
-                        : "Search Products",
-                    hintStyle:
-                        const TextStyle(color: Colors.black38, fontSize: 15),
-                    prefixIcon: const Icon(
-                      CupertinoIcons.search,
-                      color: Colors.black38,
-                    ),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.black12)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.black12)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.black12))),
+              return GestureDetector(
+                onTap: () {
+                  context.goNamed(RoutePath.searchProductPersonScreen.name);
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.black12, width: 0.8),
+                      borderRadius: BorderRadius.circular(3)),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        CupertinoIcons.search,
+                        color: Colors.black12,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        state.getWeather() != null
+                            ? "${state.getWeather()?.temperature}${state.getWeather()?.temperatureUnit} now"
+                            : "Search Products",
+                        style: const TextStyle(
+                            color: Colors.black38, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
           ),
         ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Icon(CupertinoIcons.app_badge_fill),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              BottomBarState.indexPersonBottomBar = BottomBarIndex.me.idx;
+              context.goNamed(RoutePath.myOrderPersonScreen.name);
+            },
+            child: const Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(CupertinoIcons.app_badge_fill),
+            ),
           )
         ],
       ),
@@ -206,7 +221,7 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
                               child: Text(
                             "Back",
                             style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 15),
+                                fontWeight: FontWeight.w500, fontSize: 12),
                           )),
                         ));
                   }
@@ -228,7 +243,7 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
                               child: Text(
                             "More",
                             style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 15),
+                                fontWeight: FontWeight.w500, fontSize: 12),
                           )),
                         ));
                   }

@@ -4,9 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/configs/color_config.dart';
 import 'package:mobile/configs/navigation_screen.dart';
 import 'package:mobile/configs/utils/time_format.dart';
+import 'package:mobile/datasource/models/food_model.dart';
 import 'package:mobile/datasource/repositories/food_repository.dart';
+import 'package:mobile/datasource/services/auth_service.dart';
+import 'package:mobile/presentation/screens/personal/food/checkout_order.dart';
 
 import '../../../../configs/dependency_injection.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class FoodDetailsPersonScreen extends StatefulWidget {
   final int foodId;
@@ -19,6 +23,19 @@ class FoodDetailsPersonScreen extends StatefulWidget {
 }
 
 class _FoodDetailsPersonScreenState extends State<FoodDetailsPersonScreen> {
+  void orderHandle(FoodModel food) {
+    if (!AuthService.isAuthenticated) {
+      context.goNamed(RoutePath.loginScreen.name);
+      return;
+    }
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) => CheckoutOrder(
+        food: food,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -108,7 +125,7 @@ class _FoodDetailsPersonScreenState extends State<FoodDetailsPersonScreen> {
                                   child: Text(
                                     "Sale off ${food.saleOff}%",
                                     style: const TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                        color: Colors.white, fontSize: 15),
                                   ),
                                 ),
                               ))
@@ -216,16 +233,21 @@ class _FoodDetailsPersonScreenState extends State<FoodDetailsPersonScreen> {
                                   Positioned(
                                       top: 5,
                                       right: 5,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 8),
-                                        decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: const Text(
-                                          "Order now",
-                                          style: TextStyle(color: Colors.white),
+                                      child: GestureDetector(
+                                        onTap: () => orderHandle(food),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 8),
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: const Text(
+                                            "Order now",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ))
                                 ],

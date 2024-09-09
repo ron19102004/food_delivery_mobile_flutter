@@ -85,7 +85,7 @@ class _FoodsByCategoryIdScreenState extends State<FoodsByCategoryIdScreen> {
                                 child: Text(
                                   "Back",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w500, fontSize: 15),
+                                      fontWeight: FontWeight.w500, fontSize: 12),
                                 )),
                           ));
                     }
@@ -107,7 +107,7 @@ class _FoodsByCategoryIdScreenState extends State<FoodsByCategoryIdScreen> {
                                 child: Text(
                               "More",
                               style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 15),
+                                  fontWeight: FontWeight.w500, fontSize: 12),
                             )),
                           ));
                     }

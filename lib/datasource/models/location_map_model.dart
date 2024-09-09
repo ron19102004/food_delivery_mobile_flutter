@@ -3,8 +3,8 @@ class LocationModel {
   final String licence;
   final String osmType;
   final int osmId;
-  final String latitude;
-  final String longitude;
+  final double latitude;
+  final double longitude;
   final String roadClass;
   final String type;
   final int placeRank;
@@ -31,14 +31,14 @@ class LocationModel {
     required this.code
   });
 
-  factory LocationModel.fromJson(Map<String, dynamic> json) {
+  factory LocationModel.fromJson(Map<String, dynamic> json, double latitude, double longitude) {
     return LocationModel(
       placeId: json['place_id'],
       licence: json['licence'],
       osmType: json['osm_type'],
       osmId: json['osm_id'],
-      latitude: json['lat'],
-      longitude: json['lon'],
+      latitude: latitude,
+      longitude: longitude,
       roadClass: json['class'],
       type: json['type'],
       placeRank: json['place_rank'],

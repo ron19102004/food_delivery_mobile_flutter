@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _usernameTextController.text,
         _passwordTextController.text,
         () {
-          BottomBarState.indexPersonBottomBar = 0;
+          BottomBarState.indexPersonBottomBar = BottomBarIndex.home.idx;
           context.pushNamed(RoutePath.homePersonalScreen.name);
           toastification.show(
             type: ToastificationType.success,
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: IconButton(
                     onPressed: () {
-                      BottomBarState.indexPersonBottomBar = 0;
+                      BottomBarState.indexPersonBottomBar = BottomBarIndex.home.idx;
                       context.goNamed(RoutePath.homePersonalScreen.name);
                     },
                     icon: const Icon(

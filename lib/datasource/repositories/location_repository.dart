@@ -10,7 +10,7 @@ class LocationRepository {
     var response = await http.get(Uri.parse(address_url(lat, lon)));
     if (response.statusCode != 200) return Future.error("Location not found");
     var data = jsonDecode(response.body) as Map<String, dynamic>;
-    return LocationModel.fromJson(data);
+    return LocationModel.fromJson(data,lat,lon);
   }
 
   Future<List<LocationServerModel>> getLocationServer() async {

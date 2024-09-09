@@ -4,6 +4,7 @@ import 'package:mobile/datasource/repositories/location_repository.dart';
 
 class LocationService {
   static String locationCodeCurrent = "";
+  static late LocationModel locationCurrent;
   final LocationRepository locationRepository;
 
   LocationService({required this.locationRepository});

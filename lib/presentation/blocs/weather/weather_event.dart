@@ -4,8 +4,8 @@ sealed class WeatherEvent {
 }
 
 class WeatherFetchEvent extends WeatherEvent {
-  String lon;
-  String lat;
+  double lon;
+  double lat;
 
   WeatherFetchEvent({required this.lat,required this.lon});
 }

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,8 +18,9 @@ import 'package:mobile/presentation/blocs/weather/weather_bloc.dart';
 import 'package:toastification/toastification.dart';
 
 Future<void> main() async {
-  await initializeDI();
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await initializeDI();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Make status bar transparent
     statusBarIconBrightness: Brightness.light, // Status bar icons color
@@ -47,10 +50,22 @@ class _MainWidgetState extends State<MainWidget> {
 
   // @override
   // Widget build(BuildContext context) {
-  //   return MaterialApp.router(
-  //     routerConfig: router,
-  //     debugShowCheckedModeBanner: false,
-  //
+  //   return ToastificationWrapper(
+  //     child: FutureBuilder(
+  //       future: _locationService.getLocation(),
+  //       builder: (context, snapshot) {
+  //         if (snapshot.hasData && snapshot.data != null) {
+  //           final location = snapshot.requireData;
+  //           LocationService.locationCodeCurrent = location.code;
+  //           LocationService.locationCurrent = location;
+  //           return MaterialApp.router(
+  //             routerConfig: router,
+  //             debugShowCheckedModeBanner: false,
+  //           );
+  //         }
+  //         return _loadingWidget();
+  //       },
+  //     ),
   //   );
   // }
   @override
@@ -62,13 +77,14 @@ class _MainWidgetState extends State<MainWidget> {
           if (snapshot.hasData && snapshot.data != null) {
             final location = snapshot.requireData;
             LocationService.locationCodeCurrent = location.code;
+            LocationService.locationCurrent = location;
             return MultiBlocProvider(
                 providers: [
                   BlocProvider<WeatherBloc>(
                       create: (_) => WeatherBloc()
                         ..add(WeatherFetchEvent(
-                            lat: location.latitude ?? "",
-                            lon: location.longitude ?? ""))),
+                            lat: location.latitude,
+                            lon: location.longitude))),
                   BlocProvider<LocationBloc>(
                     create: (_) => LocationBloc()
                       ..add(LoadLocationEvent(locationModel: location)),

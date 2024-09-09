@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   static bool isAuthenticated = false;
   static UserModel? userCurrent;
+  static String token = "";
 
   static Future<SellerModel?> getSellerById(int id)async{
     var response = await http.get(Uri.parse(my_api_url("sellers/details/$id")));
@@ -43,6 +44,7 @@ class AuthService {
         final user = UserModel.fromJson(dataJson["data"]);
         AuthService.userCurrent = user;
         AuthService.isAuthenticated = true;
+        AuthService.token = token;
         await _setAuthSharedPreferences(user, token);
       } catch (e) {
         AuthService.isAuthenticated = false;
@@ -88,6 +90,7 @@ class AuthService {
     await prefs.remove("token");
     AuthService.isAuthenticated = false;
     AuthService.userCurrent = null;
+    AuthService.token = "";
     nav();
   }
 
@@ -115,6 +118,7 @@ class AuthService {
       final user = UserModel.fromJson(dataJson["data"]["user"]);
       AuthService.userCurrent = user;
       AuthService.isAuthenticated = true;
+      AuthService.token = token;
       await _setAuthSharedPreferences(user, token);
       success();
     } catch (e) {

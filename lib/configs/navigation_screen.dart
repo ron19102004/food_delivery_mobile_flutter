@@ -10,8 +10,10 @@ import 'package:mobile/presentation/screens/personal/food/food_details_person_sc
 import 'package:mobile/presentation/screens/personal/food/foods_by_category_id_screen.dart';
 import 'package:mobile/presentation/screens/personal/home/home_person_screen.dart';
 import 'package:mobile/presentation/screens/personal/layout.dart';
+import 'package:mobile/presentation/screens/personal/my_order/my_order_person_screen.dart';
 import 'package:mobile/presentation/screens/personal/profile/profile_person_screen.dart';
 import 'package:mobile/presentation/screens/personal/profile/profile_seller_at_person_screen.dart';
+import 'package:mobile/presentation/screens/personal/search/search_person_screen.dart';
 import 'package:mobile/presentation/screens/personal/voucher/voucher_person_screen.dart';
 
 enum RoutePath {
@@ -23,7 +25,9 @@ enum RoutePath {
   foodDetailsPersonScreen(path: "details/:foodId"),
   foodsByCategoryIdPersonScreen(
       path: "foods_category/:categoryId/:categoryName"),
-  sellerDetailsAtPersonScreen(path: "seller/details/:id");
+  sellerDetailsAtPersonScreen(path: "seller/details/:id"),
+  searchProductPersonScreen(path: "search"),
+  myOrderPersonScreen(path: "myOrder");
 
   final String path;
 
@@ -34,8 +38,15 @@ String? _redirectWhenAuth() {
   return AuthService.isAuthenticated ? null : RoutePath.loginScreen.path;
 }
 
+enum BottomBarIndex{
+  home(idx: 0),
+  voucher(idx: 1),
+  me(idx: 2);
+  final int idx;
+  const BottomBarIndex({required this.idx});
+}
 class BottomBarState {
-  static int indexPersonBottomBar = 0;
+  static int indexPersonBottomBar = BottomBarIndex.home.idx;
 }
 
 final GoRouter router = GoRouter(
@@ -103,6 +114,13 @@ final GoRouter router = GoRouter(
                       return ProfileSellerAtPersonScreen(
                           id: int.parse(state.pathParameters["id"] ?? "0"));
                     },
+                  ),
+                  GoRoute(
+                    path: RoutePath.searchProductPersonScreen.path,
+                    name: RoutePath.searchProductPersonScreen.name,
+                    builder: (context, state) {
+                      return const SearchPersonScreen();
+                    },
                   )
                 ]),
           ]),
@@ -117,15 +135,23 @@ final GoRouter router = GoRouter(
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
-              path: RoutePath.profilePersonScreen.path,
-              name: RoutePath.profilePersonScreen.name,
-              builder: (context, state) {
-                return const ProfilePersonScreen();
-              },
-              redirect: (context, state) {
-                return _redirectWhenAuth();
-              },
-            )
+                path: RoutePath.profilePersonScreen.path,
+                name: RoutePath.profilePersonScreen.name,
+                builder: (context, state) {
+                  return const ProfilePersonScreen();
+                },
+                redirect: (context, state) {
+                  return _redirectWhenAuth();
+                },
+                routes: [
+                  GoRoute(
+                    path: RoutePath.myOrderPersonScreen.path,
+                    name: RoutePath.myOrderPersonScreen.name,
+                    builder: (context, state) {
+                      return const MyOrderPersonScreen();
+                    },
+                  ),
+                ])
           ])
         ]),
   ],
