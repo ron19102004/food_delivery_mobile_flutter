@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/assets/images/index.dart';
 import 'package:mobile/configs/color_config.dart';
 import 'package:mobile/configs/navigation_screen.dart';
+import 'package:mobile/datasource/models/user_model.dart';
+import 'package:mobile/datasource/services/auth_service.dart';
 import 'package:mobile/datasource/services/location_service.dart';
 import 'package:mobile/presentation/blocs/category/category_bloc.dart';
 import 'package:mobile/presentation/blocs/food/personal/food_personal_bloc.dart';
@@ -78,8 +80,10 @@ class _HomePersonScreenState extends State<HomePersonScreen> {
         actions: [
           GestureDetector(
             onTap: () {
-              BottomBarState.indexPersonBottomBar = BottomBarIndex.me.idx;
-              context.goNamed(RoutePath.myOrderPersonScreen.name);
+              if(AuthService.isAuthenticated && AuthService.isRole(UserRole.user)){
+                BottomBarState.indexPersonBottomBar = BottomBarIndex.me.idx;
+                context.goNamed(RoutePath.myOrderPersonScreen.name);
+              }
             },
             child: const Padding(
               padding: EdgeInsets.only(right: 10),

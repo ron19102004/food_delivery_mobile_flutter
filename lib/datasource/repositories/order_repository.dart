@@ -23,6 +23,40 @@ class OrderRepository {
     });
   }
 
+  Future<List<OrderModel>> myOrder() async {
+    var response =
+        await http.get(Uri.parse(my_api_url("foods/orders/my")), headers: {
+      "content-type": "application/json",
+      "Authorization": "Bearer ${AuthService.token}"
+    });
+    if (response.statusCode != 200) return [];
+    var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+    List<dynamic> dataArr = jsonData["data"];
+    return dataArr.map((e) => OrderModel.fromJson(e)).toList();
+  }
+  Future<ResponseLayout<dynamic>> updateDeliver(int orderId)async{
+    if (AuthService.isAuthenticated) {
+      var response = await http.patch(Uri.parse(my_api_url("foods/orders/update-deliver/$orderId")),
+          headers: {
+            "content-type": "application/json",
+            "Authorization": "Bearer ${AuthService.token}"
+          });
+      var dataJson = jsonDecode(utf8.decode(response.bodyBytes));
+      return ResponseLayout(message: dataJson["message"], status: dataJson["status"]);
+    }
+    return ResponseLayout(message: "Error", status: false);
+  }
+  Future<List<OrderModel>> getAllOrderForDeliver() async {
+    var response =
+    await http.get(Uri.parse(my_api_url("foods/orders/deliver/getAll/${LocationService.locationCurrent.code}")), headers: {
+      "content-type": "application/json",
+      "Authorization": "Bearer ${AuthService.token}"
+    });
+    if (response.statusCode != 200) return [];
+    var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+    List<dynamic> dataArr = jsonData["data"];
+    return dataArr.map((e) => OrderModel.fromJson(e)).toList();
+  }
   Future<ResponseLayout<OrderModel>> orderFood(
       int foodId,
       double latRe,

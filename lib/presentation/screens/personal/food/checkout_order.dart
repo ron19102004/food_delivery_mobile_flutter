@@ -54,7 +54,7 @@ class _CheckoutOrderState extends State<CheckoutOrder> {
   Future<void> _pasteFromClipboard() async {
     ClipboardData? data = await Clipboard.getData('text/plain');
     setState(() {
-      voucherInput.text = data?.text ?? 'No data';
+      voucherInput.text = data?.text ?? '';
     });
   }
 
@@ -68,21 +68,15 @@ class _CheckoutOrderState extends State<CheckoutOrder> {
         addressInput.text,
         voucherInput.text);
     if (res.status) {
-      toastification.show(
-        type: ToastificationType.success,
-        context: context,
-        title:  Text(res.message),
-        autoCloseDuration: const Duration(seconds: 3),
-      );
       context.pop();
-    } else {
-      toastification.show(
-        type: ToastificationType.error,
-        context: context,
-        title:  Text(res.message),
-        autoCloseDuration: const Duration(seconds: 3),
-      );
     }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(
+        res.message,
+        style: const TextStyle(color: Colors.white),
+      )),
+    );
   }
 
   @override
@@ -91,6 +85,7 @@ class _CheckoutOrderState extends State<CheckoutOrder> {
     return Scaffold(
         backgroundColor: Colors.grey.shade50,
         appBar: AppBar(
+          surfaceTintColor: Colors.grey.shade100,
           leading: IconButton(
               onPressed: () {
                 context.pop();
@@ -154,6 +149,9 @@ class _CheckoutOrderState extends State<CheckoutOrder> {
             ),
           ),
           ListTile(
+            onTap: () {
+              context.pop();
+            },
             leading: Image.network(
               widget.food.poster,
               width: 100,
@@ -328,7 +326,7 @@ class _CheckoutOrderState extends State<CheckoutOrder> {
                             ),
                             body: MapOrderWidget(
                               initialCenter: initialCenter,
-                              latLngMe: initialCenter,
+                              latLngUser: initialCenter,
                               latLngShop: latLngShop,
                             ),
                           );

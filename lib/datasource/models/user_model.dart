@@ -1,3 +1,11 @@
+enum UserRole{
+  user(role: "USER"),
+  admin(role: "ADMIN"),
+  seller(role: "SELLER"),
+  deliver(role: "DELIVER");
+  final String role;
+  const UserRole({required this.role});
+}
 class UserModel {
   final int id;
   final DateTime updatedAt;
@@ -9,7 +17,7 @@ class UserModel {
   final String phoneNumber;
   final String avatar;
   final String role;
-  final bool enabledTwoFactorAuth;
+  bool enabledTwoFactorAuth = false;
   final bool isLocked;
 
   UserModel({

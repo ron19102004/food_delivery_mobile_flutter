@@ -5,6 +5,7 @@ import 'package:mobile/configs/color_config.dart';
 import 'package:mobile/configs/navigation_screen.dart';
 import 'package:mobile/configs/utils/time_format.dart';
 import 'package:mobile/datasource/models/food_model.dart';
+import 'package:mobile/datasource/models/user_model.dart';
 import 'package:mobile/datasource/repositories/food_repository.dart';
 import 'package:mobile/datasource/services/auth_service.dart';
 import 'package:mobile/presentation/screens/personal/food/checkout_order.dart';
@@ -26,6 +27,9 @@ class _FoodDetailsPersonScreenState extends State<FoodDetailsPersonScreen> {
   void orderHandle(FoodModel food) {
     if (!AuthService.isAuthenticated) {
       context.goNamed(RoutePath.loginScreen.name);
+      return;
+    }
+    if(!AuthService.isRole(UserRole.user)){
       return;
     }
     showCupertinoModalBottomSheet(

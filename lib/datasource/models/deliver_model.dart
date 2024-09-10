@@ -3,7 +3,7 @@ class DeliverModel {
   final String name;
   final String phoneNumber;
   final String email;
-  final String avatar;
+  final String? avatar;
   final String issuedAt;
   final bool enabled;
 
@@ -12,7 +12,7 @@ class DeliverModel {
     required this.name,
     required this.phoneNumber,
     required this.email,
-    required this.avatar,
+    this.avatar,
     required this.issuedAt,
     required this.enabled,
   });

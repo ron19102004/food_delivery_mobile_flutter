@@ -2,6 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:mobile/datasource/models/deliver_model.dart';
 import 'package:mobile/datasource/models/food_model.dart';
 import 'package:mobile/datasource/models/seller_model.dart';
+import 'package:mobile/datasource/models/user_model.dart';
 
 class OrderModel {
   final int id;
@@ -20,6 +21,7 @@ class OrderModel {
   final SellerModel seller;
   final FoodModel food;
   final DeliverModel? deliver;
+  final UserModel? user;
   OrderModel({
     required this.id,
     required this.codeOrder,
@@ -36,7 +38,8 @@ class OrderModel {
     required this.address,
     required this.seller,
     required this.food,
-    this.deliver
+    this.deliver,
+    this.user,
   });
 
   // Factory method to create an OrderModel from a JSON map
@@ -57,7 +60,8 @@ class OrderModel {
       address: json['address'],
       seller:  SellerModel.fromJson(json["food"]["seller"]),
       food: FoodModel.fromJson(json["food"]),
-      deliver: json["deliver"] != null ? DeliverModel.fromJson(json["deliver"]) : null
+      deliver: json["deliver"] != null ? DeliverModel.fromJson(json["deliver"]) : null,
+      user: json["user"] != null ? UserModel.fromJson(json["user"]) : null
     );
   }
 }

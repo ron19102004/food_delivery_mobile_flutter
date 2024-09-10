@@ -47,25 +47,11 @@ class _MainWidgetState extends State<MainWidget> {
       _locationService = di();
     });
   }
-
   // @override
   // Widget build(BuildContext context) {
-  //   return ToastificationWrapper(
-  //     child: FutureBuilder(
-  //       future: _locationService.getLocation(),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.hasData && snapshot.data != null) {
-  //           final location = snapshot.requireData;
-  //           LocationService.locationCodeCurrent = location.code;
-  //           LocationService.locationCurrent = location;
-  //           return MaterialApp.router(
-  //             routerConfig: router,
-  //             debugShowCheckedModeBanner: false,
-  //           );
-  //         }
-  //         return _loadingWidget();
-  //       },
-  //     ),
+  //   return MaterialApp.router(
+  //     routerConfig: router,
+  //     debugShowCheckedModeBanner: false,
   //   );
   // }
   @override

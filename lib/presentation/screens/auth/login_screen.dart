@@ -7,6 +7,7 @@ import 'package:mobile/assets/images/index.dart';
 import 'package:mobile/configs/color_config.dart';
 import 'package:mobile/configs/navigation_screen.dart';
 import 'package:mobile/datasource/services/auth_service.dart';
+import 'package:mobile/presentation/screens/auth/verify_otp_screen.dart';
 import 'package:mobile/presentation/widgets/button_submit_auth_widget.dart';
 import 'package:mobile/presentation/widgets/input_widget.dart';
 import 'package:toastification/toastification.dart';
@@ -50,33 +51,37 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     await AuthService.login(
-        _usernameTextController.text,
-        _passwordTextController.text,
-        () {
-          BottomBarState.indexPersonBottomBar = BottomBarIndex.home.idx;
-          context.pushNamed(RoutePath.homePersonalScreen.name);
-          toastification.show(
-            type: ToastificationType.success,
-            context: context,
-            title: const Text('Login successfully'),
-            autoCloseDuration: const Duration(seconds: 3),
-          );
+        _usernameTextController.text, _passwordTextController.text, () {
+      BottomBarState.indexPersonBottomBar = BottomBarIndex.home.idx;
+      context.pushNamed(RoutePath.homePersonalScreen.name);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+          "Verify Successfully!",
+          style: TextStyle(color: Colors.white),
+        )),
+      );
+    }, (token, email) {
+      Navigator.push(context, CupertinoPageRoute(
+        builder: (context) {
+          return VerifyOtpScreen(token: token, email: email);
         },
-        (token) {},
-        (err) {
-          _toastErr(err);
-        });
+      ));
+    }, (err) {
+      _toastErr(err);
+    });
     setState(() {
       _enableButtonSubmit = true;
     });
   }
 
   void _toastErr(String err) {
-    toastification.show(
-      type: ToastificationType.error,
-      context: context,
-      title: Text(err),
-      autoCloseDuration: const Duration(seconds: 3),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(
+        err,
+        style: const TextStyle(color: Colors.white),
+      )),
     );
   }
 
@@ -102,7 +107,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: IconButton(
                     onPressed: () {
-                      BottomBarState.indexPersonBottomBar = BottomBarIndex.home.idx;
+                      BottomBarState.indexPersonBottomBar =
+                          BottomBarIndex.home.idx;
                       context.goNamed(RoutePath.homePersonalScreen.name);
                     },
                     icon: const Icon(

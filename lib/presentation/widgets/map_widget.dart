@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,14 +5,14 @@ import 'package:mobile/configs/color_config.dart';
 
 class MapOrderWidget extends StatelessWidget {
   LatLng initialCenter;
-  LatLng latLngMe;
+  LatLng latLngUser;
   LatLng latLngShop;
   LatLng? latLngDeliver;
 
   MapOrderWidget(
       {super.key,
       required this.initialCenter,
-      required this.latLngMe,
+      required this.latLngUser,
       required this.latLngShop,
       this.latLngDeliver});
 
@@ -37,12 +36,12 @@ class MapOrderWidget extends StatelessWidget {
         MarkerLayer(
           markers: [
             Marker(
-              point: latLngMe,
+              point: latLngUser,
               height: 80,
               child: Column(
                 children: [
                   Text(
-                    "Me",
+                    "User",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.red.shade500),
@@ -74,10 +73,32 @@ class MapOrderWidget extends StatelessWidget {
             ),
           ],
         ),
+        latLngDeliver != null
+            ? MarkerLayer(markers: [
+                Marker(
+                  point: latLngDeliver!,
+                  height: 80,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Deliver",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade500),
+                      ),
+                      Icon(
+                        Icons.location_on_rounded,
+                        color: Colors.blue.shade500,
+                      )
+                    ],
+                  ),
+                ),
+              ])
+            : const SizedBox(),
         PolylineLayer(
           polylines: [
             Polyline(
-                points: [latLngMe, latLngShop],
+                points: [latLngUser, latLngShop, latLngShop],
                 // Nối giữa 2 điểm
                 strokeWidth: 4.0,
                 // Độ dày của đường
